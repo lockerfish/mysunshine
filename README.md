@@ -1,4 +1,5 @@
-MySunshine
+Sunshine
 ========
 
-MySunshine is an awesome app. 
+This app is based on "Developing Android Apps" course in Udacity.
+
