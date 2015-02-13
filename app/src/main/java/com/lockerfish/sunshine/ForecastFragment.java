@@ -1,24 +1,22 @@
 package com.lockerfish.sunshine;
 
-import android.os.Bundle;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.AsyncTask;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MenuInflater;
-import android.content.Intent;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,15 +24,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Date;
-import java.text.SimpleDateFormat;
-
-import org.json.JSONObject;
+import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A forecast fragment containing a simple view.
@@ -59,24 +56,11 @@ public class ForecastFragment extends Fragment {
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        // Create some dummy data for the ListView.  Here's a sample weekly forecast
-        String[] data = {
-                "Today - Sunny - 88/63",
-                "Tomorrow - Foggy - 70/40",
-                "Wed - Cloudy - 72/63",
-                "Thurs - Asteroids - 75/65",
-                "Fri - Heavy Rain - 65/56",
-                "Sat - TRAPPED IN WEATHERSTATION - 60/51",
-                "Sun - Sunny - 80/68"
-        };
-
-        List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
-
         mForecastAdapter = new ArrayAdapter(
         	getActivity(), 
         	R.layout.list_item_forecast, 
         	R.id.list_item_forecast_textview,
-        	weekForecast);
+        	new ArrayList<String>());
 
         ListView list = (ListView)rootView.findViewById(R.id.listview_forecast);
         list.setAdapter(mForecastAdapter);
@@ -85,7 +69,7 @@ public class ForecastFragment extends Fragment {
         	@Override
         	public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-        		String item = (String)adapterView.getItemAtPosition(i);
+        		String item = (String)mForecastAdapter.getItem(i);
 
         		// Toast toast = Toast.makeText(getActivity(), item, Toast.LENGTH_SHORT);
         		// toast.show();
@@ -96,6 +80,9 @@ public class ForecastFragment extends Fragment {
 
         	}
         });
+
+	    FetchWeatherTask asyncTask = new FetchWeatherTask();
+	    asyncTask.execute("12540,usa");
 
         return rootView;
     }
@@ -214,7 +201,7 @@ public class ForecastFragment extends Fragment {
 			String forecastJsonStr = null;
 
 			String format = "json";
-			String units = "metric";
+			String units = "imperial";
 			int numDays = 7;
 			 
 			try {
@@ -291,15 +278,11 @@ public class ForecastFragment extends Fragment {
 			return null;
     	}
 
-
     	@Override
     	public void onPostExecute(String[] forecast) {
-
     		if (forecast != null) {
     			mForecastAdapter.clear();
-    			for (String dayForecastStr : forecast) {
-    				mForecastAdapter.add(dayForecastStr);
-    			}    			
+    			mForecastAdapter.addAll(forecast);	
     		}
     	}
 
