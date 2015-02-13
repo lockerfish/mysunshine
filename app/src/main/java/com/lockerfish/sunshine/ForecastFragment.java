@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.preference.PreferenceManager;
+import android.content.SharedPreferences;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +40,7 @@ import org.json.JSONObject;
  */
 public class ForecastFragment extends Fragment {
 
-	private static final String TAG = "ForecastFragment";
+	private static final String TAG = ForecastFragment.class.getSimpleName();
 
 	private ArrayAdapter<String> mForecastAdapter;
 
@@ -81,10 +83,27 @@ public class ForecastFragment extends Fragment {
         	}
         });
 
-	    FetchWeatherTask asyncTask = new FetchWeatherTask();
-	    asyncTask.execute("12540,usa");
-
         return rootView;
+    }
+
+    private void updateWeather() {
+	    FetchWeatherTask asyncTask = new FetchWeatherTask();
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		String key = getString(R.string.pref_location_key);
+		String defaultVal = getString(R.string.pref_location_default);
+		// Log.v(TAG, "key: " + key + " defaultVal: " + defaultVal);
+		String location = prefs.getString(key, defaultVal);
+		// Log.v(TAG, "location: " + location);
+		if (location == null || location.isEmpty()) {
+			location = defaultVal;
+		}
+	    asyncTask.execute(location);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
     }
 
      @Override
@@ -100,10 +119,9 @@ public class ForecastFragment extends Fragment {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-		    FetchWeatherTask asyncTask = new FetchWeatherTask();
-		    asyncTask.execute("12540,usa");
+        	updateWeather();
             return true;
-        }
+        } 
         return super.onOptionsItemSelected(item);
     }
 
@@ -126,6 +144,21 @@ public class ForecastFragment extends Fragment {
 		 * Prepare the weather high/lows for presentation.
 		 */
 		private String formatHighLows(double high, double low) {
+			// data is fetched in celsius by default
+			// if user prefers Fahrenheit convert here
+            SharedPreferences sharedPrefs =
+                    PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String unitType = sharedPrefs.getString(
+                    getString(R.string.pref_units_key),
+                    getString(R.string.pref_units_metric));
+
+            if (unitType.equals(getString(R.string.pref_units_imperial))) {
+                high = (high * 1.8) + 32;
+                low = (low * 1.8) + 32;
+            } else if (!unitType.equals(getString(R.string.pref_units_metric))) {
+                Log.d(TAG, "Unit type not found: " + unitType);
+            }
+
 		    // For presentation, assume the user doesn't care about tenths of a degree.
 		    long roundedHigh = Math.round(high);
 		    long roundedLow = Math.round(low);
@@ -201,7 +234,7 @@ public class ForecastFragment extends Fragment {
 			String forecastJsonStr = null;
 
 			String format = "json";
-			String units = "imperial";
+			String units = "metric";
 			int numDays = 7;
 			 
 			try {
@@ -222,6 +255,7 @@ public class ForecastFragment extends Fragment {
 			        .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
 			        .build();
 
+			    // Log.v(TAG, builtUri.toString());
 			    URL url = new URL(builtUri.toString());
 
 			    // Create the request to OpenWeatherMap, and open the connection
