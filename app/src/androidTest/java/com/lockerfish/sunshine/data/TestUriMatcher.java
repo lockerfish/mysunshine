@@ -18,7 +18,6 @@ package com.lockerfish.sunshine.data;
 import android.net.Uri;
 import android.test.AndroidTestCase;
 import android.content.UriMatcher;
-import android.util.Log;
 
 /*
     Uncomment this class when you are ready to test your UriMatcher.  Note that this class utilizes
@@ -38,8 +37,6 @@ public class TestUriMatcher extends AndroidTestCase {
     // content://com.lockerfish.sunshine/location"
     private static final Uri TEST_LOCATION_DIR = WeatherContract.LocationEntry.CONTENT_URI;
 
-
-    private static final String TAG = TestUriMatcher.class.getSimpleName();
     /*
         Students: This function tests that your UriMatcher returns the correct integer value
         for each of the Uri types that our ContentProvider can handle.  Uncomment this when you are
