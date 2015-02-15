@@ -40,6 +40,14 @@
 
         <provider android:name=".data.WeatherProvider"
             android:authorities="com.lockerfish.sunshine"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="com.lockerfish.sunshine.WEATHER_ACCESS"
             />
     </application>
+
+    <permission
+      android:name="com.lockerfish.sunshine.WEATHER_ACCESS"
+      android:protectionLevel="normal"
+      android:label="@string/weather_access" />
 </manifest>
