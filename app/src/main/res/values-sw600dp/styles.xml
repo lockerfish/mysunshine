@@ -1,0 +1,11 @@
+<resources>
+
+
+    <style name="ForecastListStyle">
+
+    	<!-- two pane mode -->
+    	<item name="android:choiceMode">singleChoice</item>
+    	
+    </style>
+
+</resources>
