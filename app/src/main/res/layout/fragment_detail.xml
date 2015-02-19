@@ -107,6 +107,12 @@
                 android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:textAppearance="?android:textAppearanceLarge" />
+
+            <com.lockerfish.sunshine.TurbineView
+                android:id="@+id/turbine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </com.lockerfish.sunshine.TurbineView>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

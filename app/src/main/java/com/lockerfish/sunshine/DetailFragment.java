@@ -210,6 +210,10 @@ public class DetailFragment extends Fragment implements LoaderCallbacks<Cursor> 
         TextView pressureView  = (TextView) getView().findViewById(R.id.detail_pressure_textview);
         pressureView.setText(getActivity().getString(R.string.format_pressure, pressure));
 
+        TurbineView turbine = (TurbineView) getView().findViewById(R.id.turbine);
+        turbine.setDegrees(data.getFloat(data.getColumnIndex(WeatherEntry.COLUMN_DEGREES)));
+        turbine.setSpeed(data.getFloat(data.getColumnIndex(WeatherEntry.COLUMN_WIND_SPEED)));
+
         // We still need this for the share intent
         mForecastStr = String.format("%s - %s - %s/%s", dateText, condition, high, low);
 

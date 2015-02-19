@@ -57,16 +57,6 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         Log.v(TAG, "onCreate: " + mTwoPane);
     }
 
-    // @Override
-    // public void onSaveInstanceState(Bundle detailUri) {
-    //     Log.v(TAG, "onSaveInstanceState: " + detailUri);
-    //     super.onSaveInstanceState(detailUri);
-    //     Uri weatherForLocationUri = WeatherEntry.buildWeatherLocationWithDate(
-    //             mLocation, System.currentTimeMillis());
-    //     detailUri.putParcelable(DetailFragment.DETAIL_URI, weatherForLocationUri);
-    //     Log.v(TAG, "onSaveInstanceState done");
-    // }
-
     @Override
     public void onStart() {
         super.onStart();
