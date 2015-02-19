@@ -19,4 +19,6 @@
     <string name="action_map">Map Location</string>
     <string name="action_share">Share</string>
 
+    <string name="weather_access">This app access openweathermap.org over the internet and stores its results in a localized database.</string>
+
 </resources>
