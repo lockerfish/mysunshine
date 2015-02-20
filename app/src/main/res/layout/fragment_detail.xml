@@ -108,11 +108,27 @@
                 android:layout_width="match_parent"
                 android:textAppearance="?android:textAppearanceLarge" />
 
-            <com.lockerfish.sunshine.TurbineView
-                android:id="@+id/turbine"
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </com.lockerfish.sunshine.TurbineView>
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <com.lockerfish.sunshine.TurbineView
+                    android:id="@+id/turbine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </com.lockerfish.sunshine.TurbineView>
+
+                <com.lockerfish.sunshine.WindDirectionView
+                    android:id="@+id/wind_direction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </com.lockerfish.sunshine.WindDirectionView>
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

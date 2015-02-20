@@ -41,3 +41,6 @@ project.properties
 ##Gradle-based build
 .gradle
 build/
+lextab.py
+parser.out
+parsetab.py

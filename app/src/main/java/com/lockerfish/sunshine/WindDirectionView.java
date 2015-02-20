@@ -13,29 +13,27 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.View.MeasureSpec;
 import android.view.accessibility.AccessibilityManager;
 
-public class TurbineView extends View {
+public class WindDirectionView extends View {
 
 	private final String TAG = getClass().getSimpleName();
 	private final int mDesiredWidth = 800;
 	private final int mDesiredHeight = 800;
 
-	private Bitmap mPole;
-	private Bitmap mRotor;
-	private Paint mTurbine;
-	private Float mSpeed;
-	private Float mRotation = 359f;
+	private Bitmap mWindDirection;
+	private Paint mDirection;
+	private Float mDegrees;
 
-	public TurbineView(Context context) {
+	public WindDirectionView(Context context) {
 		super(context);
 		init();
 	}
 
-	public TurbineView(Context context, AttributeSet attrs) {
+	public WindDirectionView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init();
 	}
 
-	public TurbineView(Context context, AttributeSet attrs, int defaultStyle) {
+	public WindDirectionView(Context context, AttributeSet attrs, int defaultStyle) {
 		super(context, attrs, defaultStyle);
 		init();
 		AccessibilityManager accessibilityManager = 
@@ -47,18 +45,17 @@ public class TurbineView extends View {
 
 	@Override
 	public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
-		event.getText().add("fast");
+		event.getText().add("north");
 		return true;
 	}
 
 	private void init() {
 		Log.v(TAG, "init");
 
-		mPole = BitmapFactory.decodeResource(getResources(), R.drawable.turbine_pole);
-		mRotor = BitmapFactory.decodeResource(getResources(), R.drawable.turbine_rotor);
+		mWindDirection = BitmapFactory.decodeResource(getResources(), R.drawable.wind_direction);
 
-		mTurbine = new Paint(Paint.ANTI_ALIAS_FLAG);
-		mTurbine.setStyle(Paint.Style.FILL);
+		mDirection = new Paint(Paint.ANTI_ALIAS_FLAG);
+		mDirection.setStyle(Paint.Style.FILL);
 	}
 
 	@Override
@@ -68,19 +65,9 @@ public class TurbineView extends View {
 		int x = getPaddingLeft() + 20;
 		int y = getPaddingRight() + 20;
 
-		canvas.drawBitmap(mPole, x + 20, mRotor.getHeight()/2, mTurbine);
-		canvas.drawBitmap(mRotor, rotate(mRotor, x, y), mTurbine);
-
+		canvas.drawBitmap(mWindDirection, x, y, mDirection);
 		invalidate();		
 	}
-
-    public Matrix rotate(Bitmap bm, int x, int y){
-        Matrix mtx = new Matrix();
-        mtx.postRotate(mRotation, bm.getWidth() / 2, bm.getHeight() / 2);
-        mtx.postTranslate(x, y);  //The coordinates where we want to put our bitmap
-        mRotation -= mSpeed; //degree of rotation
-        return mtx;
-    }
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -128,7 +115,8 @@ public class TurbineView extends View {
 	    setMeasuredDimension(width, height);
 	}
 
-    public void setSpeed(Float speed) {
-    	mSpeed = speed;
+    public void setDegrees(Float degrees) {
+    	mDegrees = degrees;
     }
+
 }
