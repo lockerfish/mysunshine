@@ -16,8 +16,8 @@ import android.view.accessibility.AccessibilityManager;
 public class TurbineView extends View {
 
 	private final String TAG = getClass().getSimpleName();
-	private final int mDesiredWidth = 800;
-	private final int mDesiredHeight = 800;
+	private final int mDesiredWidth = 400;
+	private final int mDesiredHeight = 400;
 
 	private Bitmap mPole;
 	private Bitmap mRotor;

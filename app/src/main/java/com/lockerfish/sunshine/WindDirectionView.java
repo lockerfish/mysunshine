@@ -16,8 +16,8 @@ import android.view.accessibility.AccessibilityManager;
 public class WindDirectionView extends View {
 
 	private final String TAG = getClass().getSimpleName();
-	private final int mDesiredWidth = 800;
-	private final int mDesiredHeight = 800;
+	private final int mDesiredWidth = 400;
+	private final int mDesiredHeight = 400;
 
 	private Bitmap mWindDirection;
 	private Paint mDirection;
@@ -25,16 +25,19 @@ public class WindDirectionView extends View {
 
 	public WindDirectionView(Context context) {
 		super(context);
+		Log.v(TAG, "WindDirectionView-context: " + context);
 		init();
 	}
 
 	public WindDirectionView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		Log.v(TAG, "WindDirectionView-context: " + context + " attrs: " + attrs);
 		init();
 	}
 
 	public WindDirectionView(Context context, AttributeSet attrs, int defaultStyle) {
 		super(context, attrs, defaultStyle);
+		Log.v(TAG, "WindDirectionView-context: " + " attrs: " + attrs + " defaultStyle: " + defaultStyle);
 		init();
 		AccessibilityManager accessibilityManager = 
 			(AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
