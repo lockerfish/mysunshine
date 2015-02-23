@@ -23,7 +23,7 @@ public class WindDirectionView extends View {
 
 	private Bitmap mWindDirection;
 	private Paint mDirection;
-	private Float mDegrees;
+	private Float mDegrees = 0f;
 
 	private Context mContext;
 

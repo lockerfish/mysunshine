@@ -24,7 +24,7 @@ public class TurbineView extends View {
 	private Bitmap mPole;
 	private Bitmap mRotor;
 	private Paint mTurbine;
-	private Float mSpeed;
+	private Float mSpeed = 0f;
 	private Float mRotation = 359f;
 	private Context mContext;
 
