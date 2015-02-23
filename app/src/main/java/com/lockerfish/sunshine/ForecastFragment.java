@@ -27,7 +27,8 @@ import com.lockerfish.sunshine.data.WeatherContract.LocationEntry;
  */
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-	private static final String TAG = ForecastFragment.class.getSimpleName();
+    private final String TAG = getClass().getSimpleName();
+    private final boolean D = Log.isLoggable(TAG, Log.DEBUG);
 
     private ListView mListView;
     private int mPosition = ListView.INVALID_POSITION;
@@ -70,22 +71,26 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 	private ForecastAdapter mForecastAdapter;
 
     public ForecastFragment() {
+        if (D) {Log.v(TAG, "ForecastFragment");}
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (D) {Log.v(TAG, "onCreate: savedInstanceState: " + savedInstanceState);}
     	super.onCreate(savedInstanceState);
     	setHasOptionsMenu(true);
     }
 
      @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (D) {Log.v(TAG, "onCreateOptionsMenu: menu: " + menu + " inflater: " + inflater);}
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.forecast_fragment, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (D) {Log.v(TAG, "onOptionsItemSelected: item: " + item);}
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -100,6 +105,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+        if (D) {Log.v(TAG, "onCreateView: inflater: " + inflater 
+            + " container: " + container 
+            + " savedInstanceState: " + savedInstanceState);
+        }
 
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
 
@@ -136,6 +145,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onSaveInstanceState(Bundle bundle) {
+        if (D) {Log.v(TAG, "onSaveInstanceState: bundle: " + bundle);}
         if (mPosition != ListView.INVALID_POSITION) {
             bundle.putInt(SELECTED_KEY, mPosition);
         }
@@ -144,16 +154,19 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        if (D) {Log.v(TAG, "onActivityCreated: savedInstanceState: " + savedInstanceState);}
         getLoaderManager().initLoader(FORECAST_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
     public void onLocationChanged() {
+        if (D) {Log.v(TAG, "onLocationChanged");}
     	updateWeather();
     	getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
     
     private void updateWeather() {
+        if (D) {Log.v(TAG, "updateWeather");}
         FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
         String location = Utility.getPreferredLocation(getActivity());
         weatherTask.execute(location);
@@ -161,6 +174,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        if (D) {Log.v(TAG, "onCreateLoader: i: " + i + " bundle: " + bundle);}
 
         String locationSetting = Utility.getPreferredLocation(getActivity());
 
@@ -179,6 +193,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        if (D) {Log.v(TAG, "onLoadFinished: cursorLoader: " + cursorLoader + " cursor: " + cursor);}
         mForecastAdapter.swapCursor(cursor);
         if (mPosition != ListView.INVALID_POSITION) {
             mListView.smoothScrollToPosition(mPosition);
@@ -187,10 +202,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        if (D) {Log.v(TAG, "onLoaderReset: cursorLoader: " + cursorLoader);}
         mForecastAdapter.swapCursor(null);
     }
 
     public void setUseTodayLayout(boolean useTodayLayout) {
+        if (D) {Log.v(TAG, "setUseTodayLayout: useTodayLayout: " + useTodayLayout);}
         mUseTodayLayout = useTodayLayout;
         if (mForecastAdapter != null) {
             mForecastAdapter.setUseTodayLayout(mUseTodayLayout);

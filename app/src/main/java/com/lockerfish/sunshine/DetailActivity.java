@@ -9,16 +9,17 @@ import android.util.Log;
 
 public class DetailActivity extends ActionBarActivity {
 
-    private static final String TAG = DetailActivity.class.getSimpleName();
+    private final String TAG = getClass().getSimpleName();
+    private final boolean D = Log.isLoggable(TAG, Log.DEBUG);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (D) { Log.v(TAG, "onCreate: saveInstanceState: " + savedInstanceState); }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
         if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
 
             Bundle arguments = new Bundle();
             arguments.putParcelable(DetailFragment.DETAIL_URI, getIntent().getData());
@@ -34,14 +35,15 @@ public class DetailActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        if (D) { Log.v(TAG, "onCreateOptionsMenu: menu: " + menu); }
+        
         getMenuInflater().inflate(R.menu.detail, menu);
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (D) { Log.v(TAG, "onOptionsItemSelected: item: " + item); }
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.

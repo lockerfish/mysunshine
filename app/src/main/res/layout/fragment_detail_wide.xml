@@ -102,6 +102,19 @@
                 android:layout_width="wrap_content"
                 android:textColor="@color/grey_700"
                 android:textAppearance="?android:textAppearanceLarge"/>
+
+            <com.lockerfish.sunshine.TurbineView
+                android:id="@+id/turbine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </com.lockerfish.sunshine.TurbineView>
+
+            <com.lockerfish.sunshine.WindDirectionView
+                android:id="@+id/wind_direction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </com.lockerfish.sunshine.WindDirectionView>
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

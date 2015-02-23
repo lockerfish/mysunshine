@@ -24,18 +24,20 @@ import android.os.Build;
 public class SettingsActivity extends PreferenceActivity
         implements Preference.OnPreferenceChangeListener {
 
-    private static final String TAG = SettingsActivity.class.getSimpleName();
+    private final String TAG = getClass().getSimpleName();
+    private final boolean D = Log.isLoggable(TAG, Log.DEBUG);
  
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (D) { Log.v(TAG, "onCreate: savedInstanceState: " + savedInstanceState);}
+
         super.onCreate(savedInstanceState);
         // Add 'general' preferences, defined in the XML file
         addPreferencesFromResource(R.xml.pref_general);
  
         // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
         // updated when the preference changes.
-        String key = getString(R.string.pref_location_key);
-        Log.v(TAG, "key: " + key);
+
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
     }
@@ -46,6 +48,7 @@ public class SettingsActivity extends PreferenceActivity
      * is changed.)
      */
     private void bindPreferenceSummaryToValue(Preference preference) {
+        if (D) { Log.v(TAG, "bindPreferenceSummaryToValue: preference: " + preference);}
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(this);
  
@@ -59,6 +62,8 @@ public class SettingsActivity extends PreferenceActivity
  
     @Override
     public boolean onPreferenceChange(Preference preference, Object value) {
+        if (D) { Log.v(TAG, "onPreferenceChange: preference: " + preference + " value: " + value);}
+
         String stringValue = value.toString();
  
         if (preference instanceof ListPreference) {
@@ -79,6 +84,7 @@ public class SettingsActivity extends PreferenceActivity
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public Intent getParentActivityIntent() {
+        if (D) { Log.v(TAG, "getParentActivityIntent");}
         return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     }
  

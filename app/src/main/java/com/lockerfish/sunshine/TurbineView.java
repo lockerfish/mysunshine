@@ -15,66 +15,86 @@ import android.view.accessibility.AccessibilityManager;
 
 public class TurbineView extends View {
 
-	private final String TAG = getClass().getSimpleName();
-	private final int mDesiredWidth = 400;
-	private final int mDesiredHeight = 400;
+    private final String TAG = getClass().getSimpleName();
+    private final boolean D = Log.isLoggable(TAG, Log.DEBUG);
+	
+	private int mDesiredWidth = 400;
+	private int mDesiredHeight = 400;
 
 	private Bitmap mPole;
 	private Bitmap mRotor;
 	private Paint mTurbine;
 	private Float mSpeed;
 	private Float mRotation = 359f;
+	private Context mContext;
 
 	public TurbineView(Context context) {
 		super(context);
+		if (D) {Log.v(TAG, "TurbineView: context: " + context); }
+		mContext = context;
 		init();
 	}
 
 	public TurbineView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		if (D) {Log.v(TAG, "TurbineView: context: " + context + " attrs: " + attrs); }
+		mContext = context;
 		init();
 	}
 
 	public TurbineView(Context context, AttributeSet attrs, int defaultStyle) {
 		super(context, attrs, defaultStyle);
-		init();
-		AccessibilityManager accessibilityManager = 
-			(AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
-		if (accessibilityManager.isEnabled()) {
-			sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED);
+		if (D) {Log.v(TAG, "TurbineView: context: " + context 
+			+ " attrs: " + attrs 
+			+ " defaultStyle: " + defaultStyle);
 		}
+		mContext = context;
+		init();
 	}
 
 	@Override
 	public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
+		if (D) {Log.v(TAG, "dispatchPopulateAccessibilityEvent: event: " + event);}
 		event.getText().add("fast");
 		return true;
 	}
 
 	private void init() {
-		Log.v(TAG, "init");
+		if (D) {Log.v(TAG, "init");}
 
 		mPole = BitmapFactory.decodeResource(getResources(), R.drawable.turbine_pole);
 		mRotor = BitmapFactory.decodeResource(getResources(), R.drawable.turbine_rotor);
 
 		mTurbine = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mTurbine.setStyle(Paint.Style.FILL);
+
+		mDesiredWidth = Math.max(mPole.getWidth(), mRotor.getWidth()) + 50;
+		mDesiredHeight = Math.max(mPole.getHeight(), mRotor.getHeight()) + 40;
+
+		AccessibilityManager accessibilityManager = 
+			(AccessibilityManager) mContext.getSystemService(Context.ACCESSIBILITY_SERVICE);
+		if (accessibilityManager.isEnabled()) {
+			sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED);
+		}
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
+		// if (D) {Log.v(TAG, "onDraw");}
+
 		super.onDraw(canvas);
 
-		int x = getPaddingLeft() + 20;
-		int y = getPaddingRight() + 20;
+		int x = 30; //getPaddingLeft() + 20;
+		int y = 0; //getPaddingRight() + 20;
 
-		canvas.drawBitmap(mPole, x + 20, mRotor.getHeight()/2, mTurbine);
+		canvas.drawBitmap(mPole, x, mRotor.getHeight()/2, mTurbine);
 		canvas.drawBitmap(mRotor, rotate(mRotor, x, y), mTurbine);
 
-		invalidate();		
+		invalidate();
 	}
 
     public Matrix rotate(Bitmap bm, int x, int y){
+    	// if (D) {Log.v(TAG, "rotate");}
         Matrix mtx = new Matrix();
         mtx.postRotate(mRotation, bm.getWidth() / 2, bm.getHeight() / 2);
         mtx.postTranslate(x, y);  //The coordinates where we want to put our bitmap
@@ -85,15 +105,17 @@ public class TurbineView extends View {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-		Log.v(TAG, "onMeasure");
+		if (D) {Log.v(TAG, "onMeasure: widthMeasureSpec: " + widthMeasureSpec 
+			+ " heightMesaureSpec: " + heightMeasureSpec);
+		}
 
 	    int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 	    int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 	    int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 	    int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
-	    Log.v(TAG, "widthMode: " + widthMode + ", heightMode: " + heightMode);
-	    Log.v(TAG, "widthSize: " + widthSize + ", heightSize: " + heightSize);
+	    if (D) { Log.v(TAG, "widthMode: " + widthMode + ", heightMode: " + heightMode); }
+	    if (D) { Log.v(TAG, "widthSize: " + widthSize + ", heightSize: " + heightSize); }
 
 	    int width;
 	    int height;
@@ -122,13 +144,14 @@ public class TurbineView extends View {
 	        height = mDesiredHeight;
 	    }
 
-		Log.v(TAG, "width: " + width + ", height: " + height);
+		if (D) { Log.v(TAG, "width: " + width + ", height: " + height); }
 
 	    //MUST CALL THIS
 	    setMeasuredDimension(width, height);
-	}
+	}    
 
     public void setSpeed(Float speed) {
+    	if (D) {Log.v(TAG, "setSpeed: speed: " + speed);}
     	mSpeed = speed;
     }
 }

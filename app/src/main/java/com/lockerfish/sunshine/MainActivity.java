@@ -15,7 +15,8 @@ import com.lockerfish.sunshine.data.WeatherContract.WeatherEntry;
 
 public class MainActivity extends ActionBarActivity implements ForecastFragment.Callback {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private final String TAG = getClass().getSimpleName();
+    private final boolean D = Log.isLoggable(TAG, Log.DEBUG);
 
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
@@ -24,10 +25,12 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (D) { Log.v(TAG, "onCreate: savedInstanceState: " + savedInstanceState);}
+
         super.onCreate(savedInstanceState);
 
         mLocation = Utility.getPreferredLocation(this);
-        Log.v(TAG, "mLocation: " + mLocation);
+        if (D) { Log.v(TAG, "mLocation: " + mLocation);}
 
         setContentView(R.layout.activity_main);
         if (findViewById(R.id.weather_detail_container) != null) {
@@ -38,7 +41,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
-            Log.v(TAG, "savedInstanceState: " + savedInstanceState);
+            if (D) { Log.v(TAG, "savedInstanceState: " + savedInstanceState);}
             if (savedInstanceState == null) {
 
 
@@ -54,34 +57,34 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         ForecastFragment forecastFragment = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
         forecastFragment.setUseTodayLayout(!mTwoPane);
 
-        Log.v(TAG, "onCreate: " + mTwoPane);
+        if (D) { Log.v(TAG, "onCreate: " + mTwoPane); }
     }
 
     @Override
     public void onStart() {
+        if (D) { Log.v(TAG, "onStart");}
+
         super.onStart();
-        Log.v(TAG, "onStart");
     }
 
     @Override
     public void onResume() {
+        if (D) { Log.v(TAG, "onResume");}
+
         super.onResume();
-        Log.v(TAG, "onResume");
 
         String location = Utility.getPreferredLocation(this);
-        Log.v(TAG, "location: " + location);
+        if (D) { Log.v(TAG, "location: " + location); }
         if (location != null && !location.equals(mLocation)) {
             ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
-            Log.v(TAG, "ff: " + ff);
+            if (D) { Log.v(TAG, "ff: " + ff); }
             if (null != ff) {
                 ff.onLocationChanged();
-                Log.v(TAG, "onLocationChanged called");
             }
             DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
-            Log.v(TAG, "df: " + df);
+            if (D) { Log.v(TAG, "df: " + df); }
             if ( null != df ) {
                 df.onLocationChanged(location);
-                Log.v(TAG, "onLocationChanged called");
             }
             mLocation = location;
         }
@@ -89,24 +92,29 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
     @Override
     public void onPause() {
+        if (D) { Log.v(TAG, "onPause");}
+
         super.onPause();
-        Log.v(TAG, "onPause");
     }
 
     @Override
     public void onStop() {
+        if (D) { Log.v(TAG, "onStop");}
+
         super.onStop();
-        Log.v(TAG, "onStop");
     }
 
     @Override
     public void onDestroy() {
+        if (D) { Log.v(TAG, "onDestroy");}
+
         super.onDestroy();
-        Log.v(TAG, "onDestroy");
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if (D) { Log.v(TAG, "onCreateOptionsMenu: menu: " + menu);}
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
@@ -115,6 +123,8 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (D) { Log.v(TAG, "onOptionsItemSelected: item: " + item);}
+
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -131,6 +141,8 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
     }
 
     private void openPreferredLocationInMap() {
+        if (D) { Log.v(TAG, "openPreferredLocationInMap");}
+
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         String location = sharedPrefs.getString(
             getString(R.string.pref_location_key),
@@ -147,12 +159,14 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         } else {
-            Log.d(TAG, "Couldn't call " + location + ", no receiving apps installed!");
+            if (D) { Log.d(TAG, "Couldn't call " + location + ", no receiving apps installed!"); }
         }
     }
 
     @Override
     public void onItemSelected(Uri contentUri) {
+        if (D) { Log.v(TAG, "onItemSelected: contentUri: " + contentUri);}
+
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a

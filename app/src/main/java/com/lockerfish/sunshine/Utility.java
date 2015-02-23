@@ -23,9 +23,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.util.Log;
+
 import android.text.format.Time;
 
 public class Utility {
+
+    private final String TAG = getClass().getSimpleName();
 
     // Format used for storing dates in the database.  ALso used for converting those strings
     // back into date objects for comparison/processing.
@@ -246,4 +250,5 @@ public static int getIconResourceForWeatherCondition(int weatherId) {
         }
         return -1;
     }
+
 }

@@ -28,7 +28,9 @@ import com.lockerfish.sunshine.data.WeatherContract.LocationEntry;
  */
 public class DetailFragment extends Fragment implements LoaderCallbacks<Cursor> {
 
-    private static final String TAG = DetailFragment.class.getSimpleName();
+    private final String TAG = getClass().getSimpleName();
+    private final boolean D = Log.isLoggable(TAG, Log.DEBUG);
+
     public static final String DETAIL_URI = "URI";
 
     private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
@@ -69,25 +71,31 @@ public class DetailFragment extends Fragment implements LoaderCallbacks<Cursor> 
     public static final int COL_WEATHER_CONDITION_ID = 9;
 
     public DetailFragment() {
+        if (D) { Log.v(TAG, "DetailFragment"); }
+
         setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView started");
+        if (D) { Log.v(TAG, "onCreateView: inflater" + inflater 
+            + " container: " + container 
+            + " savedInstanceState: " + savedInstanceState); 
+        }
+
         Bundle arguments = getArguments();
-        Log.v(TAG, "arguments: " + arguments);
+        if (D) { Log.v(TAG, "arguments: " + arguments); }
         if (arguments != null) {
             mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
         }
-        Log.v(TAG, "mUri: " + mUri);
-        Log.v(TAG, "onCreateView completed");
+        if (D) { Log.v(TAG, "mUri: " + mUri); }
         return inflater.inflate(R.layout.fragment_detail, container, false);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (D) { Log.v(TAG, "onCreateOptionsMenu: menu: " + menu + " inflater: " + inflater); }
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.detail_fragment, menu);
 
@@ -100,11 +108,13 @@ public class DetailFragment extends Fragment implements LoaderCallbacks<Cursor> 
         if (mForecastStr != null) {
             mShareActionProvider.setShareIntent(createShareForecastIntent());
         } else {
-            Log.d(TAG, "Share Action Provider is null?");
+            if (D) { Log.d(TAG, "Share Action Provider is null?"); }
         }
     }
 
     private Intent createShareForecastIntent() {
+        if (D) { Log.v(TAG, "createShareForecastIntent");}
+
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("text/plain");
@@ -115,34 +125,31 @@ public class DetailFragment extends Fragment implements LoaderCallbacks<Cursor> 
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        Log.v(TAG, "onActivityCreated");
-        Log.v(TAG, "savedInstanceState: " + savedInstanceState);
+        if (D) { Log.v(TAG, "onActivityCreated: savedInstanceState: " + savedInstanceState);}
 
         if (mUri == null) {
             String location = Utility.getPreferredLocation(getActivity());
             // Bundle bundle = new Bundle();
             Uri contentUri = WeatherEntry.buildWeatherLocationWithDate(
                     location, System.currentTimeMillis());
-            Log.v(TAG, "contentUri: " + contentUri);
+            if (D) { Log.v(TAG, "contentUri: " + contentUri); }            
             // bundle.putParcelable(DetailFragment.DETAIL_URI, contentUri);
             mUri = contentUri;
         }
 
         getLoaderManager().initLoader(DETAIL_LOADER, savedInstanceState, this);
         super.onActivityCreated(savedInstanceState);
-        Log.v(TAG, "onActivityCreated done");
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.v(TAG, "In onCreateLoader");
+        if (D) { Log.v(TAG, "onCreateLoader: id: " + id + " args: " + args);}
 
         // if (args != null) {
         //     mUri = args.getParcelable(DetailFragment.DETAIL_URI);
         // }
 
         if ( null != mUri) {
-            Log.v(TAG, "creating loader");
             // Now create and return a CursorLoader that will take care of
             // creating a Cursor for the data being displayed.
             return new CursorLoader(
@@ -154,12 +161,14 @@ public class DetailFragment extends Fragment implements LoaderCallbacks<Cursor> 
                     null
             );
         }
-        Log.v(TAG, "loader NOT created it is NULL");
+        if (D) { Log.v(TAG, "loader NOT created it is NULL"); }
         return null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (D) { Log.v(TAG, "onLoadFinished: loader: " + loader + " data: " + data);}
+
         if (!data.moveToFirst()) { return; }
 
         int weatherId = data.getInt(data.getColumnIndex(WeatherEntry.COLUMN_WEATHER_ID));
@@ -192,7 +201,6 @@ public class DetailFragment extends Fragment implements LoaderCallbacks<Cursor> 
         String condition = data.getString(COL_WEATHER_DESC);
         TextView conditionView = (TextView) getView().findViewById(R.id.detail_forecast_textview);
         conditionView.setText(condition);
-
 
         // Read humidity from cursor and update view
         float humidity = data.getFloat(COL_WEATHER_HUMIDITY);
@@ -230,17 +238,15 @@ public class DetailFragment extends Fragment implements LoaderCallbacks<Cursor> 
     }
 
     public void onLocationChanged( String newLocation ) {
+        if (D) { Log.v(TAG, "onLocationChanged: newLocation: " + newLocation);}
         // replace the uri, since the location has changed
-        Log.v(TAG, "onLocationChanged: " + newLocation);
         Uri uri = mUri;
         if (null != uri) {
             long date = WeatherEntry.getDateFromUri(uri);
             Uri updatedUri = WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
             mUri = updatedUri;
-            Log.v(TAG, "mUri: " + mUri);
+            if (D) { Log.v(TAG, "mUri: " + mUri);}
             getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
-            Log.v(TAG, "loader restarted");
         }
-        Log.v(TAG, "onLocationChanged ended");
     }
 }
