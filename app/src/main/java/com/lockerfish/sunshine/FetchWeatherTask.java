@@ -47,15 +47,15 @@ import android.database.DatabaseUtils;
 
 public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
 
-    private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
+    private final String TAG = getClass().getSimpleName();
+    private final boolean D = Log.isLoggable(TAG, Log.DEBUG);
 
     private final Context mContext;
 
     public FetchWeatherTask(Context context) {
+        if (D) { Log.v(TAG, "FetchWeatherTask: context: " + context);}
         mContext = context;
     }
-
-    private boolean DEBUG = true;
 
     /**
      * Helper method to handle insertion of a new location in the weather database.
@@ -67,6 +67,11 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
      * @return the row ID of the added location.
      */
     long addLocation(String locationSetting, String cityName, double lat, double lon) {
+        if (D) { Log.v(TAG, "addLocation: locationSetting: " + locationSetting 
+            + " cityName: " + cityName 
+            + " lat: " + lat 
+            + " lon: " + lon);
+        }
         // Students: First, check if the location with this city name exists in the db
         // If it exists, return the current ID
         // Otherwise, insert it using the content resolver and the base URI
@@ -109,6 +114,10 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
      */
     private void getWeatherDataFromJson(String forecastJsonStr,
                                             String locationSetting) {
+        if (D) { Log.v(TAG, "getWeatherDataFromJson: forecastJsonStr: " 
+            + forecastJsonStr 
+            + " locationSetting: " + locationSetting);
+        }
 
         // Now we have a String representing the complete forecast in JSON Format.
         // Fortunately parsing is easy:  constructor takes the JSON string and converts it
@@ -238,16 +247,17 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
                 inserted = mContext.getContentResolver().bulkInsert(WeatherEntry.CONTENT_URI, cvArray);
             }
 
-            Log.d(LOG_TAG, "FetchWeatherTask Complete. " + inserted + " Inserted");
+            if (D) { Log.d(TAG, "FetchWeatherTask Complete. " + inserted + " Inserted"); }
 
         } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
             e.printStackTrace();
         }
     }
 
     @Override
     protected Void doInBackground(String... params) {
+        if (D) { Log.v(TAG, "doInBackground: params: " + params);}
 
         // If there's no zip code, there's nothing to look up.  Verify size of params.
         if (params.length == 0) {
@@ -316,7 +326,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
             forecastJsonStr = buffer.toString();
             getWeatherDataFromJson(forecastJsonStr, locationQuery);
         } catch (IOException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
             e.printStackTrace();
         } finally {
             if (urlConnection != null) {
@@ -326,7 +336,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
                 try {
                     reader.close();
                 } catch (final IOException e) {
-                    Log.e(LOG_TAG, "Error closing stream", e);
+                    Log.e(TAG, "Error closing stream", e);
                 }
             }
         }
