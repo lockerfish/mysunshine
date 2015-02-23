@@ -11,7 +11,7 @@
     <ListPreference
     	android:key="@string/pref_units_key"
     	android:title="@string/pref_units_label"
-    	android:defaultValue="@string/pref_units_metric"
+    	android:defaultValue="@string/pref_units_imperial"
     	android:entries="@array/pref_units_options"
     	android:entryValues="@array/pref_units_values"
     	/>
